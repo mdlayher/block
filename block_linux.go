@@ -92,6 +92,31 @@ func (d *device) Size() (uint64, error) {
 	return size, err
 }
 
+// Read implements io.Reader for a block device.
+func (d *device) Read(b []byte) (int, error) {
+	return d.dev.Read(b)
+}
+
+// ReadAt implements io.ReaderAt for a block device.
+func (d *device) ReadAt(b []byte, off int64) (int, error) {
+	return d.dev.ReadAt(b, off)
+}
+
+// Seek implements io.Seeker for a block device.
+func (d *device) Seek(offset int64, whence int) (int64, error) {
+	return d.dev.Seek(offset, whence)
+}
+
+// Write implements io.Writer for a block device.
+func (d *device) Write(b []byte) (int, error) {
+	return d.dev.Write(b)
+}
+
+// WriteAt implements io.WriterAt for a block device.
+func (d *device) WriteAt(b []byte, off int64) (int, error) {
+	return d.dev.WriteAt(b, off)
+}
+
 // ioctlFunc is the signature for a function which can perform the ioctl syscall,
 // or a mocked version of it.
 type ioctlFunc func(fd uintptr, request int, argp uintptr) (uintptr, error)

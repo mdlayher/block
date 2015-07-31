@@ -1,7 +1,10 @@
 // Package block enables programmatic access to block devices.
 package block
 
-import "errors"
+import (
+	"errors"
+	"io"
+)
 
 var (
 	// ErrNotBlockDevice is returned when a device name passed to New is
@@ -22,9 +25,13 @@ type Device struct {
 // devicer is an internal interface which maintains parity between operating
 // system implementations.
 type devicer interface {
-	Close() error
 	Identify() ([512]byte, error)
 	Size() (uint64, error)
+
+	io.Closer
+	io.ReadWriteSeeker
+	io.ReaderAt
+	io.WriterAt
 }
 
 // New attempts to open a block device with the specified flags, and verifies
