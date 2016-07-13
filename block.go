@@ -26,6 +26,7 @@ type Device struct {
 // system implementations.
 type devicer interface {
 	Identify() ([512]byte, error)
+	ReadSMART() (*SMARTData, error)
 	Size() (uint64, error)
 
 	io.Closer

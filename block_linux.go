@@ -92,6 +92,26 @@ func (d *device) Size() (uint64, error) {
 	return size, err
 }
 
+const (
+	_HDIO_DRIVE_CMD    = 0x031f
+	_WIN_SMART         = 0xb0
+	_SMART_READ_VALUES = 0xd0
+)
+
+func (d *device) ReadSMART() (*SMARTData, error) {
+	b := [516]byte{}
+	b[0] = _WIN_SMART
+	b[2] = _SMART_READ_VALUES
+	b[3] = 1
+
+	_, err := d.ioctl(d.fd, _HDIO_DRIVE_CMD, uintptr(unsafe.Pointer(&b[0])))
+	if err != nil {
+		return nil, err
+	}
+
+	return parseSMARTData(b), nil
+}
+
 // Read implements io.Reader for a block device.
 func (d *device) Read(b []byte) (int, error) {
 	return d.dev.Read(b)
