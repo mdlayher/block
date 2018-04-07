@@ -86,7 +86,8 @@ func ioctlSize(t *testing.T, size uint64, err error) ioctlFunc {
 			t.Fatalf("unexpected ioctl request constant:\n- want: %v\n-  got: %v", want, got)
 		}
 
-		// This is ugly, but it seems to get the job done.
+		// Cast and dereference pointer to store the value of size in the
+		// value pointed to by argp.
 		*(*uint64)(argp) = size
 
 		return 0, err
@@ -101,6 +102,13 @@ func ioctlIdentify(t *testing.T, data [512]byte, err error) ioctlFunc {
 			t.Fatalf("unexpected ioctl request constant:\n- want: %v\n-  got: %v", want, got)
 		}
 
+		// This one-liner enables copying the value in data into the
+		// 512-byte array pointed to by argp.
+		//  - Cast argp to pointer to 512-byte array
+		//  - Dereference the pointer to get 512-byte array value
+		//  - Add a slice header to make use of copy
+		//  - Copy data into the 512-byte array.
+		//
 		// This is ugly, but it seems to get the job done.
 		copy((*(*[512]byte)(argp))[:], data[:])
 		return 0, err
