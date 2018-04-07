@@ -87,7 +87,7 @@ func ioctlSize(t *testing.T, size uint64, err error) ioctlFunc {
 		}
 
 		// This is ugly, but it seems to get the job done.
-		*(*uint64)(unsafe.Pointer(argp)) = size
+		*(*uint64)(argp) = size
 
 		return 0, err
 	}
@@ -102,7 +102,7 @@ func ioctlIdentify(t *testing.T, data [512]byte, err error) ioctlFunc {
 		}
 
 		// This is ugly, but it seems to get the job done.
-		copy((*(*[512]byte)(unsafe.Pointer(argp)))[:], data[:])
+		copy((*(*[512]byte)(argp))[:], data[:])
 		return 0, err
 	}
 }
