@@ -86,10 +86,8 @@ func ioctlSize(t *testing.T, size uint64, err error) ioctlFunc {
 			t.Fatalf("unexpected ioctl request constant:\n- want: %v\n-  got: %v", want, got)
 		}
 
-		// This is ugly, but it seems to get the job done
-		p := (*uint64)(unsafe.Pointer(argp))
-		*p = size
-		argp = unsafe.Pointer(p)
+		// This is ugly, but it seems to get the job done.
+		*(*uint64)(unsafe.Pointer(argp)) = size
 
 		return 0, err
 	}
@@ -103,11 +101,8 @@ func ioctlIdentify(t *testing.T, data [512]byte, err error) ioctlFunc {
 			t.Fatalf("unexpected ioctl request constant:\n- want: %v\n-  got: %v", want, got)
 		}
 
-		// This is ugly, but it seems to get the job done
-		p := (*[512]byte)(unsafe.Pointer(argp))
-		copy((*p)[:], data[:])
-		argp = unsafe.Pointer(p)
-
+		// This is ugly, but it seems to get the job done.
+		copy((*(*[512]byte)(unsafe.Pointer(argp)))[:], data[:])
 		return 0, err
 	}
 }
