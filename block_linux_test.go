@@ -98,7 +98,7 @@ func ioctlSize(t *testing.T, size uint64, err error) ioctlFunc {
 // Device.Identify.  Its return values can be customized by data and err.
 func ioctlIdentify(t *testing.T, data [512]byte, err error) ioctlFunc {
 	return func(fd uintptr, request int, argp unsafe.Pointer) (uintptr, error) {
-		if want, got := hdioGetIdentity, request; want != got {
+		if want, got := unix.HDIO_GET_IDENTITY, request; want != got {
 			t.Fatalf("unexpected ioctl request constant:\n- want: %v\n-  got: %v", want, got)
 		}
 

@@ -10,9 +10,6 @@ import (
 	"golang.org/x/sys/unix"
 )
 
-// TODO(mdlayher): add to x/sys/unix.
-const hdioGetIdentity = 0x030d
-
 var _ devicer = &device{}
 
 // A device is a Linux-specific block device.
@@ -77,7 +74,7 @@ func (d *device) Close() error {
 func (d *device) Identify() ([512]byte, error) {
 	// TODO(mdlayher): possibly parse and return a struct instead of an array
 	var b [512]byte
-	_, err := d.ioctl(d.fd, hdioGetIdentity, unsafe.Pointer(&b[0]))
+	_, err := d.ioctl(d.fd, unix.HDIO_GET_IDENTITY, unsafe.Pointer(&b[0]))
 	if err != nil {
 		return [512]byte{}, err
 	}
