@@ -25,5 +25,5 @@ func parseID(b [512]byte) *ID {
 
 // byteStr converts bytes to a string and trims any null characters.
 func byteStr(b []byte) string {
-	return strings.TrimSpace(string(b))
+	return strings.TrimSuffix(strings.TrimSpace(string(b)), "\x00")
 }
